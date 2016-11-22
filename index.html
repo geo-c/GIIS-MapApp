@@ -1,0 +1,23 @@
+<html>
+<head>
+ <link rel="stylesheet" href="leaflet/leaflet.css" />
+ <script src="leaflet/leaflet.js"></script>
+ <script src="leafletembed.js"></script>
+<style>
+#map { height: 100%; }
+</style>
+
+</head>
+<body>
+
+ <div id="map"></div>
+
+<script>
+
+initmap();
+addMarker(-74.575981, 4.672209);
+addPolygon();
+map.on('click', onMapClick);
+</script>
+</body>
+</html>
