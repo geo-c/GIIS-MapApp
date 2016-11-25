@@ -3,6 +3,8 @@
  <link rel="stylesheet" href="leaflet/leaflet.css" />
  <script src="leaflet/leaflet.js"></script>
  <script src="leafletembed.js"></script>
+ <script type='text/javascript' src='maps/markers.json'></script>
+ <script src="data/naturalReserves.geojson"></script>
 <style>
 #map { height: 100%; }
 </style>
@@ -18,6 +20,10 @@ initmap();
 addMarker(-74.575981, 4.672209);
 addPolygon();
 map.on('click', onMapClick);
+//addMarkers();
+//TODO
+addOverLay(natReserves);
+
 </script>
 </body>
 </html>
