@@ -1,14 +1,11 @@
 <html>
 <head>
  <link rel="stylesheet" href="leaflet/leaflet.css" />
+ <link rel="stylesheet" href="styles/style.css" />
  <script src="leaflet/leaflet.js"></script>
  <script src="leafletembed.js"></script>
- <script type='text/javascript' src='maps/markers.json'></script>
- <script src="data/naturalReserves.geojson"></script>
-<style>
-#map { height: 100%; }
-</style>
 
+ <script src="data/naturalReserves.geojson"></script>
 </head>
 <body>
 
@@ -23,6 +20,7 @@ map.on('click', onMapClick);
 //addMarkers();
 //TODO
 addOverLay(natReserves);
+addLegend();
 
 </script>
 </body>

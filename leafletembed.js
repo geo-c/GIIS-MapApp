@@ -15,7 +15,11 @@ function initmap() {
 }
 
 function addOverLay(natReserves){
-	var natural_reserves = L.geoJson(natReserves).addTo(map);
+	var natural_reserves = L.geoJson(
+		natReserves,
+		{style : reservesStyle}
+		).addTo(map);
+	map.fitBounds(natural_reserves.getBounds());
 }
 
 function addMarker(x,y){
@@ -36,6 +40,51 @@ function onMapClick(e) {
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(map);
 }
+
+function reservesStyle(feature) {
+    return {
+        fillColor: getColor(feature.properties.hectareas_),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+function getColor(area) {
+    return area > 570000 ? '#800026' :
+           area > 200000  ? '#BD0026' :
+           area > 83000  ? '#E31A1C' :
+           area > 54000  ? '#FC4E2A' :
+           area > 32000   ? '#FD8D3C' :
+           area > 10000   ? '#FEB24C' :
+           area > 1000   ? '#FED976' :
+                      '#FFEDA0';
+}
+
+function addLegend(){
+	var legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+			grades = [0, 1000, 10000, 32000, 54000, 83000, 200000, 570000],
+			labels = [];
+
+		// loop through our density intervals and generate a label with a colored square for each interval
+		for (var i = 0; i < grades.length; i++) {
+			div.innerHTML +=
+				'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+				grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+		}
+
+		return div;
+	};
+
+	legend.addTo(map);
+}
+
 
 // markers = [
 //    {
