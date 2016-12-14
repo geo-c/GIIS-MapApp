@@ -1,27 +1,70 @@
-<html>
-<head>
- <link rel="stylesheet" href="leaflet/leaflet.css" />
- <link rel="stylesheet" href="styles/style.css" />
- <script src="leaflet/leaflet.js"></script>
- <script src="leafletembed.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <script src="data/naturalReserves.geojson"></script>
-</head>
-<body>
+    <title>Geoinformation in Society</title>
+    <!--LEAFLET INCLUDE-->
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <script src="leaflet/leaflet.js"></script>
 
- <div id="map"></div>
+    <!--INCLUDE OWN FILES-->
+    <script src="leafletembed.js"></script>
 
-<script>
+    <!--INCLUDE NATURAL RESERVES-->
+    <script src="data/naturalReserves.geojson"></script>
 
-initmap();
-addMarker(-74.575981, 4.672209);
-addPolygon();
-map.on('click', onMapClick);
-//addMarkers();
-//TODO
-addOverLay(natReserves);
-addLegend();
+    <!-- INCLUDE Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+			body {
+				padding-top: 10px;
+			}
+	</style>
 
-</script>
-</body>
+  </head>
+  <body>
+      <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="map" style="height:700px"></div>
+            </div>
+        </div>
+      </div>
+    
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe class="embed-responsive-item" src="https://en.m.wikipedia.org/wiki/Jaguar"></iframe>
+                </div>
+                <div class="col-md-6">
+                    <h3>Animals in the park</h3>
+                    <li>Jaguar</li>
+                    <li>Shark</li>
+                    <li>Elephant</li>
+                </div>
+                <div class="col-md-6">
+                    <img src="jaguar.jpg" alt="Animal picture" height="100px" width="100px">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        initmap();
+        addMarker(-74.575981, 4.672209);
+        addPolygon();
+        map.on('click', onMapClick);
+        //addMarkers();
+        //TODO
+        addOverLay(natReserves);
+        addLegend();
+    </script>
+  </body>
 </html>
