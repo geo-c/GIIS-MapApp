@@ -3,9 +3,9 @@
  <link rel="stylesheet" href="leaflet/leaflet.css" />
  <link rel="stylesheet" href="styles/style.css" />
  <script src="leaflet/leaflet.js"></script>
- <script src="leafletembed.js"></script>
-
- <script src="data/naturalReserves.geojson"></script>
+ <script src="js/index.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+ <script src="data/parks.geojson"></script>
 </head>
 <body>
 
@@ -14,14 +14,11 @@
 <script>
 
 initmap();
-addMarker(-74.575981, 4.672209);
-addPolygon();
 map.on('click', onMapClick);
-//addMarkers();
-//TODO
 addOverLay(natReserves);
 addLegend();
 
 </script>
+<script src="js/loadserverdata.js"></script>
 </body>
 </html>
