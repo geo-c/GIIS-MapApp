@@ -10,7 +10,7 @@ $(document).ready(function(){
         	  "authorization": key  }, 
           success: function(result){
               
-              alert(result);
+              //alert(result);
               parseJSONParks(result);
 
     		}, 

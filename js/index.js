@@ -1,26 +1,30 @@
+
+//init map
 var map;
+map = new L.Map('map');
 
-function initmap() {
-	// set up the map
-	map = new L.Map('map');
+// create the tile layer with correct attribution
+var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib});
 
-	// create the tile layer with correct attribution
-	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-	var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib});
+// start the map in Columbia
+map.setView(new L.LatLng(4.672209, -74.575981),14);
+map.addLayer(osm);
 
-	// start the map in Columbia
-	map.setView(new L.LatLng(4.672209, -74.575981),14);
-	map.addLayer(osm);
-}
+//overlay natural reserves layer
+var natural_reserves = L.geoJson(
+	natReserves,
+	{style : reservesStyle}
+	).addTo(map);
+map.fitBounds(natural_reserves.getBounds());
 
-function addOverLay(natReserves){
-	var natural_reserves = L.geoJson(
-		natReserves,
-		{style : reservesStyle}
-		).addTo(map);
-	map.fitBounds(natural_reserves.getBounds());
-}
+
+addLegend();
+
+//map.on('click', onMapClick);
+
+
 
 function addMarker(x,y){
 	var marker = L.marker([y, x]).addTo(map);
@@ -34,12 +38,12 @@ function addPolygon(){
 ]).addTo(map);
 }
 
-function onMapClick(e) {
-	var popup = L.popup()
-				.setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
-}
+// function onMapClick(e) {
+// 	var popup = L.popup()
+// 				.setLatLng(e.latlng)
+//         .setContent("You clicked the map at " + e.latlng.toString())
+//         .openOn(map);
+// }
 
 function reservesStyle(feature) {
     return {
@@ -84,6 +88,68 @@ function addLegend(){
 
 	legend.addTo(map);
 }
+
+//interaction event
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+
+	 info.update(layer.feature.properties);
+}
+
+//reset style when moved away
+function resetHighlight(e) {
+    natural_reserves.resetStyle(e.target);
+	info.update();
+	
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+//adding listeners to parks
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+natural_reserves = L.geoJson(natReserves, {
+    style: reservesStyle,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+
+//Adding custom info control
+var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+    this._div.innerHTML = '<h4>Natural Reserves</h4>' +  (props ?
+        '<b>' + props.Name + '</b><br />' + props.hectareas_ + ' Area m<sup>2</sup>'
+        : 'Hover over a park');
+};
+
+info.addTo(map);
 
 
 // markers = [
