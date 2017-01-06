@@ -5,18 +5,25 @@ $(document).ready(function(){
     $.ajax({
           url: URL,
           method: "GET",
-         
+          dataType: "json",
           data: { 
         	  "authorization": key  }, 
           success: function(result){
               
               alert(result);
+              parseJSONParks(result);
 
     		}, 
     		error: function(xhr, textStatus, errorThrown){ 
-    			alert("failed")               	 	
+    			alert("Unable to fetch Server data")               	 	
     	    }
           });
 
 
 });
+
+function parseJSONParks(obj){
+
+    console.log( obj[1].parkname.value );
+
+}
