@@ -1,4 +1,10 @@
 
+
+
+// for(i=0; i<d_parks.length;i++){
+//         console.log( d_parks[i].name +" "+ d_parks[i].area); 
+//    }
+
 //init map
 var map;
 map = new L.Map('map');
@@ -104,7 +110,15 @@ function highlightFeature(e) {
         layer.bringToFront();
     }
 
-	 info.update(layer.feature.properties);
+	//match parkname and send the value based on downloaded values
+
+	console.log("area is "+ getArea(layer.feature.properties.Name));
+
+	//area retrieved
+	
+	var area = getArea(layer.feature.properties.Name);
+
+	 info.update(layer.feature.properties,area);
 }
 
 //reset style when moved away
@@ -143,13 +157,14 @@ info.onAdd = function (map) {
 };
 
 // method that we will use to update the control based on feature properties passed
-info.update = function (props) {
+info.update = function (props,area) {
     this._div.innerHTML = '<h4>Natural Reserves</h4>' +  (props ?
-        '<b>' + props.Name + '</b><br />' + props.hectareas_ + ' Area m<sup>2</sup>'
+        '<b>' + props.Name + '</b><br />' + area + ' Area m<sup>2</sup>'
         : 'Hover over a park');
 };
 
 info.addTo(map);
+
 
 
 // markers = [
