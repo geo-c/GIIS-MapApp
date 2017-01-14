@@ -31,18 +31,19 @@ var baseMaps = {
 };
 
 var overlayMaps = {
-    "Parks": natural_reserves
+    "Parks": natural_reserves,
+    "HeatMap": heat_layer
 };
 
 //Creating a layer control and adding it to map
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-map.on('overlayadd' , function(layer){
-    //overlay parkslayer
-    if(layer.name == 'Parks'){
-        L.addLayer(natural_reserves);
-    }  
-});
+// map.on('overlayadd' , function(layer){
+   
+//     // if(layer.name == 'Parks'){
+//     //     L.addLayer(natural_reserves);
+//     // }  
+// });
 
 
 
