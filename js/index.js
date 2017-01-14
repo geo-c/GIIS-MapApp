@@ -12,10 +12,10 @@ map = new L.Map('map');
 // create the tile layer with correct attribution
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib});
+var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 12, attribution: osmAttrib});
 
 // start the map in Columbia
-map.setView(new L.LatLng(4.672209, -74.575981),14);
+map.setView(new L.LatLng(4.672209, -74.575981),12);
 map.addLayer(osm);
 
 //overlay natural reserves layer
@@ -23,7 +23,12 @@ var natural_reserves = L.geoJson(
 	natReserves,
 	{style : reservesStyle}
 	).addTo(map);
+
+
 map.fitBounds(natural_reserves.getBounds());
+
+//restrict map to area of interest only
+map.setMaxBounds(natural_reserves.getBounds());
 
 
 addLegend();
