@@ -1,10 +1,4 @@
 
-
-
-// for(i=0; i<d_parks.length;i++){
-//         console.log( d_parks[i].name +" "+ d_parks[i].area); 
-//    }
-
 //init map
 var map;
 map = new L.Map('map');
@@ -14,15 +8,16 @@ var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 12, attribution: osmAttrib});
 
-// start the map in Columbia
-map.setView(new L.LatLng(4.672209, -74.575981),12);
+
 map.addLayer(osm);
 
-//overlay natural reserves layer
+//creating natural reserves layer based on geojson
 var natural_reserves = L.geoJson(
 	natReserves,
-	{style : reservesStyle}
-	).addTo(map);
+	{style : reservesStyle,
+    onEachFeature: onEachFeature
+    });
+
 
 
 map.fitBounds(natural_reserves.getBounds());
@@ -31,23 +26,29 @@ map.fitBounds(natural_reserves.getBounds());
 map.setMaxBounds(natural_reserves.getBounds());
 
 
+var baseMaps = {
+    "OpenStreetMap": osm
+};
+
+var overlayMaps = {
+    "Parks": natural_reserves
+};
+
+//Creating a layer control and adding it to map
+L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+map.on('overlayadd' , function(layer){
+    //overlay parkslayer
+    if(layer.name == 'Parks'){
+        L.addLayer(natural_reserves);
+    }  
+});
+
+
 addLegend();
 
 //map.on('click', onMapClick);
 
-
-
-function addMarker(x,y){
-	var marker = L.marker([y, x]).addTo(map);
-}
-
-function addPolygon(){
-	var polygon = L.polygon([
-    [4.672209, -74.575981],
-    [4.672209, -74.578981],
-    [4.682209, -74.579981]
-]).addTo(map);
-}
 
 // function onMapClick(e) {
 // 	var popup = L.popup()
@@ -146,10 +147,10 @@ function onEachFeature(feature, layer) {
     });
 }
 
-natural_reserves = L.geoJson(natReserves, {
-    style: reservesStyle,
-    onEachFeature: onEachFeature
-}).addTo(map);
+// natural_reserves = L.geoJson(natReserves, {
+//     style: reservesStyle,
+//     onEachFeature: onEachFeature
+// }).addTo(map);
 
 
 //Adding custom info control
