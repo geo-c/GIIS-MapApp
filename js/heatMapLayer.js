@@ -1,7 +1,38 @@
-var heat_layer = L.heatLayer([
-    [ 0.74925, -72.910, 50], // lat, lng, intensity
-    [ 2.11109, -71.52649, 100],
-    [ 7.71607, -75.94849, 30],
+
+var parkArray = [];
+//Calculate the center point of each park
+for(var i in natReserves.features){
+
+    console.log(natReserves.features[i].properties.Name);
+
+    var natural_reserves = L.geoJson( natReserves.features[i]);
     
-], {radius: 25});
+    
+   // console.log(natural_reserves.getBounds().getCenter());
+
+    var center = natural_reserves.getBounds().getCenter();
+
+    var parkName = natReserves.features[i].properties.Name;
+
+    //TODO
+    var coord= [center.lat, center.lng , 90]; //hardcoding intensity values for now
+
+    console.log(coord);
+
+     var park = {name : parkName, heat:coord };
+
+    parkArray.push(park);
+}
+
+//populate matrix for heat map 
+var heatArray=[];
+
+for(var i in parkArray){
+    heatArray.push( parkArray[i].heat );
+}
+
+
+console.log(heatArray);
+
+var heat_layer = L.heatLayer(heatArray, {radius: 25});
 

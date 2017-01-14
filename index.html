@@ -17,7 +17,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
-    <!--Load data from server-->
+    <!--Load parks layer to overlay-->
  	<script src="data/parks.geojson"></script>
      
     <style type="text/css">
@@ -64,10 +64,14 @@
 
 
     
-    <!--INCLUDE OWN FILES-->
-    <script src="js/loadserverdata.js"></script>
+    <!--INCLUDE OWN FILES -->
+    <script src="js/loadserverdata.js"></script> 
     <script src="js/updateHTML.js"></script>
     <script src="js/parseParksProperties.js"></script>
+    <!-- Loading heat map library-->
+    <script src="leaflet/leaflet-heat.js"></script>
+    <script src="js/heatMapLayer.js"></script>
     <script src="js/index.js"></script>
+    
 </body>
 </html>
