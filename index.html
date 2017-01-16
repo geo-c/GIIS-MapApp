@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Columbian wildlife reserves</title>
+    <title>Colombian wildlife reserves</title>
     <!--LEAFLET INCLUDE-->
     <link rel="stylesheet" href="leaflet/leaflet.css"/>
     <script src="leaflet/leaflet.js"></script>
@@ -28,11 +28,22 @@
 
 </head>
 <body>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-body row">
+                <div class="col-md-9">
+                    <iframe class="embed-responsive-item" id="iframe" src="https://en.wikipedia.org/wiki/Vultur_gryphus" height=350px width=700px ></iframe>
+	            </div>
+            </div>
+        </div>
+    </div>
+
       <div class="col-md-12">
-        <h1>Wildlife reserves in Columbia</h1>
+        <h1>Wildlife reserves in Colombia</h1>
         <hr>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="map" style="height:600px"></div>
@@ -40,9 +51,9 @@
         </div>
       </div>
     
-    <div class="col-md-6">
+    <div class="col-md-3" id="sidepanel" style="display: none">
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body" id="sidebar">
                 <div class="embed-responsive embed-responsive-4by3">
                     <iframe class="embed-responsive-item" id="iframe" src="https://en.wikipedia.org/wiki/Jaguar"></iframe>
                 </div>

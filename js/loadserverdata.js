@@ -43,3 +43,31 @@ function parseJSONParks(obj){
 
 }
 
+
+function getAnimals(name, park) {
+    
+    var animals;
+    //ship around the parliament typo
+    if(name == Amphibian) {
+        name2 = 'Anfibian';
+    }
+    var query = '';
+    $.ajax({
+        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + query,
+        method: "GET",
+        dataType: "json",
+        async:false,
+        success: function(result){
+            
+           // alert("loading now...");
+           //do something with the animals
+            animals = result.results
+            console.log(animals);
+            insertAnimal(animals, name);
+
+        }, 
+        error: function(xhr, textStatus, errorThrown){ 
+            alert("Unable to fetch Server data")               	 	
+        }
+    });
+}
