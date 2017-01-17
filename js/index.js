@@ -136,7 +136,7 @@ function resetHighlight(e) {
 	
 }
 //TODO hand over the name of the species as well
-var customPopup = "<table><tr><td><center><b>Birds</b></center></td><td><center><b>Mammals</b></center></td></tr><tr><td><a href='#11'><img src='https://i.ytimg.com/vi/Dbo3eoNN5tc/maxresdefault.jpg' height='70px' width='80px' onclick = 'getAnimals(Bird, currentPark);'/></a></td><td><a href='#2'><img src='http://www.animalspot.net/wp-content/uploads/2013/01/Mammals-Hair.jpg' height='70px' width='80px' onclick='getAnimals(Mammal, currentPark)' /></a></td></tr><tr><td><center><b>Reptiles</b></center></td><td><center><b>Amphibians</b></center></td></tr><tr><td><a href ='#3'><img src='http://www.naturephoto-cz.com/img/reptiles.jpg' height='70px' width='80px' onclick='getAnimals(Reptile, currentPark)' /></td><td></a><a href='#4'><img src='http://www.kidzone.ws/animals/images/amphibian1a.jpg' height='70px' width='80px' onclick='getAnimals(Amphibian, currentPark)'/></a></td></tr></table>";
+var customPopup = "<table><tr><td><center><b>Birds</b></center></td><td><center><b>Mammals</b></center></td></tr><tr><td><a href='#11'><img src='https://i.ytimg.com/vi/Dbo3eoNN5tc/maxresdefault.jpg' height='70px' width='80px' onclick = 'getAnimals(" + '"Bird"' + ", currentPark);'/></a></td><td><a href='#2'><img src='http://www.animalspot.net/wp-content/uploads/2013/01/Mammals-Hair.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Mammal"' + ", currentPark)' /></a></td></tr><tr><td><center><b>Reptiles</b></center></td><td><center><b>Amphibians</b></center></td></tr><tr><td><a href ='#3'><img src='http://www.naturephoto-cz.com/img/reptiles.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Reptile"' + ", currentPark)' /></td><td></a><a href='#4'><img src='http://www.kidzone.ws/animals/images/amphibian1a.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Amphibian"' + ", currentPark)'/></a></td></tr></table>";
 
 var currentPark;
 
@@ -145,7 +145,7 @@ function zoomToFeature(e) {
     var sidepanel = document.getElementById('sidepanel');
     sidepanel.style.display = 'none';
     //get the park name
-    currentPark = e.target.layer.feature.properties.ID;
+    currentPark = e.target.feature.properties.ID;
     var marker = e.target;
 	marker.bindPopup(customPopup);
 }

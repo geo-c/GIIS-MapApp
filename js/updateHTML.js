@@ -33,18 +33,20 @@ function insertAnimal(listOfAnimals, name) {
     var sidepanel = document.getElementById('sidepanel');
     sidepanel.style.display = 'block';
     //call the function to get data from the parliament!!!!
+
+    console.log(listOfAnimals);
+
     var sidebar = document.getElementById('sidebar');
-    console.log(sidebar);
     //empty sidebar
     sidebar.innerHTML = '';
-    $('#sidebar').html('<h3 id="head">' + name + ' in the park</h3>')
+    $('#sidebar').html('<h3 id="head">' + name + 's in the park</h3>')
     //insert the table with the headings for the categories
-    $('<table><center><tr><th id="vunerable">Vunerable</th></tr><tr><th id="endangered">Endangered</th></tr><tr><th id="critically_endangered">Critically Endangered</th></tr><tr><th id="alien_species">Alien Species</th></tr>').insertAfter('#head');
+    $('<table><center><tr id="vulnerable"><th>Vulnerable</th></tr><tr id="endangered"><th>Endangered</th></tr><tr id="critically_endangered"><th>Critically Endangered</th></tr><tr id="alien_species"><th>Alien Species</th></tr>').insertAfter('#head');
     for(i in listOfAnimals) {
         //if for each animal what status it has
-        if(listOfAnimals[i].status.value == "Vunerable") {
-            $('<tr><td>' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#vunerable');
-        }
+        if(listOfAnimals[i].status.value == "Vulnerable") {
+            $('<tr><td>' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#vulnerable');
+    }
         else if(listOfAnimals[i].status.value == "Endangered") {
             $('<tr><td>' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#endangered');
         }
