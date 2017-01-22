@@ -19,7 +19,7 @@ $(function(){
             
             var parks_obtained = result.results.bindings;
             //alert(parks_obtained[0].parkname.value);
-            zoomToMatchedArea(parks_obtained);
+            insertParks(parks_obtained);
 
         }, 
         error: function(xhr, textStatus, errorThrown){ 
@@ -28,7 +28,26 @@ $(function(){
         });
     });
 
+    function insertParks(listOfParks) {
+    var sidepanel = document.getElementById('sidepanel');
+    sidepanel.style.display = 'block';
+    //call the function to get data from the parliament!!!!
+
+    console.log(listOfParks);
+
+    var sidebar = document.getElementById('sidebar');
+    //empty sidebar
+    sidebar.innerHTML = '';
+    $('#sidebar').html('<h3 id="head">Parks Found</h3>')
+    //insert the table with the headings for the categories
+     $('<table><center><tr id="parks"><th>Parks</th></tr>').insertAfter('#head');
     
+    //Sort all animals into the specific category
+    for(i in listOfParks) {
+         $('<tr><td onclick="openModal(this.innerHTML)">' + listOfParks[i].parkname.value + '</td></tr>').insertAfter('#parks');
+    }
+}
+
 
 });
 
