@@ -33,23 +33,22 @@ function insertAnimalList(listOfAnimals, name) {
     var sidebar = document.getElementById('sidebar');
     //empty sidebar
     sidebar.innerHTML = '';
-    $('#sidebar').html('<h3 id="head">' + name + 's in the park</h3>')
+    $('#sidebar').html('<h3>' + name + 's in the park</h3><h6 id="head">(Click the list-items)</h6>');
     //insert the table with the headings for the categories
-    $('<table><center><tr id="vulnerable"><th>Vulnerable</th></tr><tr id="endangered"><th>Endangered</th></tr><tr id="critically_endangered"><th>Critically Endangered</th></tr><tr id="alien_species"><th>Alien Species</th></tr>').insertAfter('#head');
-    
+    $('<table><center><tr id="vulnerable"><th>Vulnerable</th></tr><tr id="endangered"><th>Endangered</th></tr><tr id="critically_endangered"><th>Critically Endangered</th></tr><tr id="alien_species"><th>Alien Species</th></tr></center></table>').insertAfter('#head');
     //Sort all animals into the specific category
     for(i in listOfAnimals) {
         if(listOfAnimals[i].status.value == "Vulnerable") {
-            $('<tr><td onclick="openModal(this.innerHTML)">' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#vulnerable');
+            $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#vulnerable');
     }
         else if(listOfAnimals[i].status.value == "Endangered") {
-            $('<tr><td onclick="openModal(this.innerHTML)">' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#endangered');
+            $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#endangered');
         }
         else if(listOfAnimals[i].status.value == "Critically Endangered") {
-            $('<tr><td onclick="openModal(this.innerHTML)">' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#critically_endangered');
+            $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#critically_endangered');
         }
         else if(listOfAnimals[i].status.value == "Alien Specie") {
-            $('<tr><td onclick="openModal(this.innerHTML)">' + listOfAnimals[i].Name.value + '</td></tr>').insertAfter('#alien_species');
+            $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#alien_species');
         }
         
     }
@@ -59,9 +58,20 @@ function insertAnimalList(listOfAnimals, name) {
  * @desc Open the modal for further information on specific animals
  * @param name Name of the animal, for which the information should be displayed
  */
-function openModal(name) {
+function openModal(info) {
     console.log(name);
+    console.log(info);
+    var modal_information = document.getElementById('modal_information');
+    //empty sidebar
+    modal_information.innerHTML = '';
     modal.style.display = "block";
+    $('<h3 id="ScName">' + info[0].commonN.value + '</h3>').appendTo('#modal_information');
+    $('<table><center><tr id="ScientificName"><th>Scientific Name</th></tr><tr id="animal_class"><th>Class</th></tr><tr id="status"><th>Status</th></tr></center></table>').insertAfter('#ScName');
     //insert the further information for the animal
-    //make a new function to call the data from the parliament. --> maybe call even that function when onclick the animals
+    $('<tr><td>' + info[0].scientificN.value + '</td></tr>').insertAfter('#ScientificName');
+    $('<tr><td>' + info[0].aClass.value + '</td></tr>').insertAfter('#animal_class');
+    $('<tr><td>' + info[0].conservationS.value + '</td></tr>').insertAfter('#status');
+
+    //update the iframe for the specific animal
+    $('#iframe').attr("src", "https://en.wikipedia.org/wiki/" + info[0].scientificN.value); 
 }
