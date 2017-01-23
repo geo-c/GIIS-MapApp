@@ -26,8 +26,6 @@ window.onclick = function(event) {
 function insertAnimalList(listOfAnimals, name) {
     var sidepanel = document.getElementById('sidepanel');
     sidepanel.style.display = 'block';
-    //call the function to get data from the parliament!!!!
-
     console.log(listOfAnimals);
 
     var sidebar = document.getElementById('sidebar');
@@ -35,7 +33,7 @@ function insertAnimalList(listOfAnimals, name) {
     sidebar.innerHTML = '';
     $('#sidebar').html('<h3>' + name + 's in the park</h3><h6 id="head">(Click the list-items)</h6>');
     //insert the table with the headings for the categories
-    $('<table><center><tr id="vulnerable"><th>Vulnerable</th></tr><tr id="endangered"><th>Endangered</th></tr><tr id="critically_endangered"><th>Critically Endangered</th></tr><tr id="alien_species"><th>Alien Species</th></tr></center></table>').insertAfter('#head');
+    $('<table><center><tr id="vulnerable"><th>Vulnerable</th></tr><tr id="endangered"><th>Endangered</th></tr><tr id="critically_endangered"><th>Critically Endangered</th></tr></center></table><hr><h3 id="alien_species">Alien Species</h3>').insertAfter('#head');
     //Sort all animals into the specific category
     for(i in listOfAnimals) {
         if(listOfAnimals[i].status.value == "Vulnerable") {
@@ -47,10 +45,17 @@ function insertAnimalList(listOfAnimals, name) {
         else if(listOfAnimals[i].status.value == "Critically Endangered") {
             $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#critically_endangered');
         }
-        else if(listOfAnimals[i].status.value == "Alien Specie") {
-            $('<tr><td onclick="getAnimalInformation(this.innerHTML)">' + listOfAnimals[i].ScientificName.value + '</td></tr>').insertAfter('#alien_species');
-        }
-        
+    }
+}
+
+/**
+ * @desc Insert a list of all alien species into the HTML
+ * @param alienS List of all alien species in the park.
+ */
+function insertAlienSpecies(alienS) {
+    //insert all alien species for the park into the list
+    for(i in alienS) {
+        $('<table><center><tr><td>' + alienS[i].ScientificName.value + '</td></tr></center></table>').insertAfter('#alien_species')
     }
 }
 
