@@ -70,7 +70,7 @@ function getAnimals(name, park) {
         async:false,
         success: function(result){
             animals = result.results.bindings;
-            insertAnimalList(animals, name);
+            insertAnimalList(animals, name, park);
         }, 
         error: function(xhr, textStatus, errorThrown){ 
             alert("Unable to fetch Server data");             	 	
@@ -97,4 +97,25 @@ function getAnimalInformation(name) {
             alert("Unable to fetch Server data");             	 	
         }
     }); 
+}
+
+function getAlienSpecies(park) {
+
+    var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?scientificN ?commonN\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?s wd:livesIn park:4p.\n?s wd:ConservationStatus "Alien Specie".\n?s txn:scientificName ?scientificN.\n?s bio:commonName ?commonN.\n}\n}';
+
+    $.ajax({
+        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
+        method: "GET",
+        dataType: "jsonp",
+        async:false,
+        success: function(result){
+            console.log(result);
+            var list = result.results.bindings;
+            //open the modal with the information
+            insertAlienSpecies(list);
+        }, 
+        error: function(xhr, textStatus, errorThrown){ 
+            alert("Unable to fetch Server data");             	 	
+        }
+    });    
 }
