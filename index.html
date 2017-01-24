@@ -43,15 +43,27 @@
                 background-color: rgba(0,0,0,0.4); 
         }
 		body {
-		    padding-top: 10px;
+		    padding:0;
+            margin: 0;
 		}
         .modal-content {
             background-color: #fefefe;
             margin: auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 90%;
-            height:90%;   
+            width: 100%;
+            height:100%;   
+        }
+
+        #def, #bio {
+            background-color: greenyellow;
+        }
+        
+        #def:hover {
+            background-color: red;
+        }
+        #bio:hover {
+            background-color: yellow;
         }
 
 	</style>
@@ -63,7 +75,7 @@
         <div class="modal-content">
             <div class="modal-body row">
                 <div class="col-md-9">
-                    <iframe id="iframe" src="" style="height:500px; width:100%"></iframe>
+                    <iframe id="iframe" src="" style="height:400px; width:100%"></iframe>
 	            </div>
                 <div class="col-md-3" id="modal_information">
                 </div>
@@ -125,7 +137,10 @@
             </div>
         </div>
     </div>
-    <div id="map"></div>
+    <div id="map">
+        <button id="def" type="button" class="btn btn-default" >Deforestation</button>
+        <button id="bio" type="button" class="btn btn-default">Biodiversity</button>
+    </div>
     
     <!--INCLUDE OWN FILES -->
     <script src="js/loadserverdata.js"></script> 
