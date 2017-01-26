@@ -8,31 +8,74 @@ var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 12, attribution: osmAttrib});
 
+//Enhanced Basemap using MapBox
+var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+	mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibmdhdmlzaCIsImEiOiJjaXFheHJmc2YwMDdoaHNrcWM4Yjhsa2twIn0.8i1Xxwd1XifUU98dGE9nsQ';
 
-map.addLayer(osm);
-
-//creating natural reserves layer based on geojson
+var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
+	satellite = L.tileLayer(mbUrl, {id: 'mapbox.satellite', attribution: mbAttr}),
+	dark = L.tileLayer(mbUrl, {id: 'mapbox.dark', attribution: mbAttr}),
+	light = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr});
+var legend = L.control({position: 'bottomright'});
+var myStyle = {
+    "color": "#ff7800",
+    "weight": 0.5,
+    "opacity": 0.65
+};
 var natural_reserves = L.geoJson(
-	natReserves,
+	
+    natReserves,
 	{style : reservesStyle,
     onEachFeature: onEachFeature
     });
+addLegend();
+
+var def = function()
+{   
+    natural_reserves.setStyle(reservesStyle)
+    addLegend();
+    
+}
+
+
+var bio = function()
+{   
+    natural_reserves.setStyle(reservesStyle2)
+    addLegend2();
+    
+}
+
+document.getElementById('def').onclick = def;
+document.getElementById('bio').onclick = bio;
+
+
+map.addLayer(light);
+map.addLayer(natural_reserves);
+
+//creating natural reserves layer based on geojson
 
 
 
+
+
+map.addLayer(natural_reserves);
 map.fitBounds(natural_reserves.getBounds());
 
 //restrict map to area of interest only
 map.setMaxBounds(natural_reserves.getBounds());
 
-
 var baseMaps = {
-    "OpenStreetMap": osm
+    "OpenStreetMap": osm,
+    "Dark Basemap":dark,
+    "Light Basemap":light,
+      
 };
 
 var overlayMaps = {
     "Parks": natural_reserves,
-    "HeatMap": heat_layer
+    //"HeatMap": heat_layer Makes no sence with polygons
 };
 
 //Creating a layer control and adding it to map
@@ -47,7 +90,7 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 
 
-addLegend();
+
 
 //map.on('click', onMapClick);
 
@@ -59,10 +102,12 @@ function onMapClick(e) {
         .openOn(map);
 }
 
+
+
 function reservesStyle(feature) {
     return {
-        fillColor: getColor(feature.properties.hectareas_),
-        weight: 2,
+        fillColor: getColor(feature.properties.Deforestat),
+        weight: 0.5,
         opacity: 1,
         color: 'white',
         dashArray: '3',
@@ -70,31 +115,31 @@ function reservesStyle(feature) {
     };
 }
 
-function getColor(area) {
-    return area > 570000 ? '#800026' :
-           area > 200000  ? '#BD0026' :
-           area > 83000  ? '#E31A1C' :
-           area > 54000  ? '#FC4E2A' :
-           area > 32000   ? '#FD8D3C' :
-           area > 10000   ? '#FEB24C' :
-           area > 1000   ? '#FED976' :
-                      '#FFEDA0';
+function getColor(deforestation) {
+        return deforestation >=10.1  ?'#E31A1C' :
+           deforestation >=5.9   ?'#FC4E2A' :
+           deforestation >=3.5   ?'#FFFF00'    :
+           deforestation >=1.4   ? '#38A800' :
+           deforestation >= 0.21    ? '#8BD100' :
+                      '#A3FF73';
 }
 
 function addLegend(){
-	var legend = L.control({position: 'bottomright'});
+    
+	
 
 	legend.onAdd = function (map) {
 
 		var div = L.DomUtil.create('div', 'info legend'),
-			grades = [0, 1000, 10000, 32000, 54000, 83000, 200000, 570000],
+			grades = [0.21, 1.4, 3.5, 5.9, 10.1],
 			labels = [];
 
 		// loop through our density intervals and generate a label with a colored square for each interval
+        div.innerHTML +='<strong>Deforestation Index</strong><br>';
 		for (var i = 0; i < grades.length; i++) {
-			div.innerHTML +=
-				'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-				grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+			div.innerHTML +='<p><i style="background:' + getColor(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
+				//'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+				//grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
 		}
 
 		return div;
@@ -103,13 +148,62 @@ function addLegend(){
 	legend.addTo(map);
 }
 
+
+
+function reservesStyle2(feature) {
+    return {
+        fillColor: getColor2(feature.properties.bio),
+        weight: 0.5,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+function getColor2(Biodiversity) {
+        return Biodiversity >=0.98  ?'#071DAD' :
+           Biodiversity >=0.59  ?'#9400D3' :
+           Biodiversity >=0.32  ?'#FF0000'    :
+           Biodiversity >=0.14  ? '#FFFF00' :
+           Biodiversity >= 0.01    ? '#8BD100' :
+                      '#A3FF73';
+}
+
+function addLegend2(){
+    
+    
+	
+    
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+			grades = [0.01, 0.14 , 0.32, 0.59 ,0.98 ],
+			labels = [];
+
+		// loop through our density intervals and generate a label with a colored square for each interval
+        div.innerHTML +='<strong>Biodiversity Index</strong><br>';
+		for (var i = 0; i < grades.length; i++) {
+			div.innerHTML +='<p><i style="background:' + getColor2(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
+				//'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+				//grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+		}
+
+		return div;
+	};
+
+	legend.addTo(map);
+}
+
+
+
+
 //interaction event
 function highlightFeature(e) {
     var layer = e.target;
 
     layer.setStyle({
-        weight: 5,
-        color: '#666',
+        weight: 2,        
         dashArray: '',
         fillOpacity: 0.7
     });
@@ -128,7 +222,6 @@ function highlightFeature(e) {
 
 	 info.update(layer.feature.properties,area);
 }
-
 //reset style when moved away
 function resetHighlight(e) {
     natural_reserves.resetStyle(e.target);
@@ -156,7 +249,7 @@ function zoomToFeature(e) {
 function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
+        //mouseout: resetHighlight,
         click: zoomToFeature
     });
 }
@@ -178,4 +271,5 @@ info.update = function (props,area) {
 };
 
 info.addTo(map);
+
 

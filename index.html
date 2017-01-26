@@ -54,6 +54,17 @@
             height:90%;   
         }
 
+        #def, #bio {
+            background-color: greenyellow;
+        }
+        
+        #def:hover {
+            background-color: red;
+        }
+        #bio:hover {
+            background-color: yellow;
+        }
+
 	</style>
 
 </head>
@@ -125,7 +136,10 @@
             </div>
         </div>
     </div>
-    <div id="map"></div>>
+    <div id="map">
+        <button id="def" type="button" class="btn btn-default" >Deforestation</button>
+        <button id="bio" type="button" class="btn btn-default">Biodiversity</button>
+    </div>
 
     <datalist id="specieslist">
 
