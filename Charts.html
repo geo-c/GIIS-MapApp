@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+<head>  
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<style>
+	.myButton {
+	background-color:#44c767;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:14px;
+	font-weight:bold;
+	padding:14px 14px;
+	text-decoration:none;
+	text-shadow:0px 0px 0px #2f6627;
+	}
+	.myButton:hover {
+	background-color:#5cbf2a;
+	}
+	.myButton:active {
+	position:relative;
+	top:1px;
+	}
+
+	</style>
+	<script type="text/javascript">
+	
+	function getBiodiversityChart() {
+	//window.onload = function () {
+    //ajax request to the parliament
+   // var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?aClass ?scientificN ?commonN ?conservationS ?dbPedia\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?s txn:scientificName "' + name + '".\n?s bio:commonName ?commonN.\n?s bio:class ?aClass.\n?s txn:scientificName ?scientificN.\n?s wd:ConservationStatus ?conservationS.\n?s owl:sameAs ?dbPedia\n}\n}'
+    
+	var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?p ?value ?n\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?p prop:hasProperty ?parks.\n?p foaf:name ?n.\n?parks uco:propertyName "BiodiversityIndex".\n?parks gr:hasValue ?value.\n}\n}';
+
+    var dataPoints = [];
+	$.ajax({
+        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
+        method: "GET",
+        dataType: "jsonp",
+        async:false,
+        success: function(result){
+		//console.log(result);
+		for (var i in result.results.bindings){
+		var prk = result.results.bindings[i].n.value;
+		//var park = prk.substring(0, 6);
+        var bdind = parseFloat(result.results.bindings[i].value.value);
+		
+		dataPoints.push({label: prk, y: bdind});
+	;
+		}
+		var chart = new CanvasJS.Chart("chartContainer",{
+        title:{
+            text:"Biodiversity Index of the Parks"
+        },
+		backgroundColor: "",
+		//height: 500,
+        animationEnabled: true,
+		axisX: {
+		title: "Parks",
+		labelAngle: 90,
+		interval: 1
+		},
+		axisY: {
+        title: "Value"
+		},
+		theme: "theme3",
+		data: [{
+        type: "column",
+		color: "orange",
+        dataPoints : dataPoints,
+        }]
+		});
+		chart.render();
+			
+			//var info = result.results.bindings;
+        }, 
+        error: function(xhr, textStatus, errorThrown){ 
+            alert("Unable to fetch Server data");             	 	
+        }
+    }); 
+}
+
+function getDeforestationChart() {
+	//window.onload = function () {
+	
+	var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?p ?value ?n\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?p prop:hasProperty ?parks.\n?p foaf:name ?n.\n?parks uco:propertyName "DeforestationIndex".\n?parks gr:hasValue ?value.\n}\n}';
+
+    var dataPoints = [];
+	$.ajax({
+        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
+        method: "GET",
+        dataType: "jsonp",
+        async:false,
+        success: function(result){
+		//console.log(result);
+		for (var i in result.results.bindings){
+		var prk = result.results.bindings[i].n.value;
+        var defInd = parseFloat(result.results.bindings[i].value.value);
+		dataPoints.push({label: prk, y: defInd });
+		}
+		
+		var chart = new CanvasJS.Chart("chartContainer",{
+        title:{
+            text:"Deforestation Index of the Parks"
+        },
+        animationEnabled: true,
+		colorSet: "customColorSet2",
+		axisX: {
+        title: "Parks",
+		labelAngle: 90,
+		interval: 1
+		},
+		axisY: {
+        title: "Value",
+		maximum: 25
+		},
+		theme: "theme3",
+		data: [{
+        type: "column",
+		color: "darkgreen",
+        //showInLegend: true,
+		dataPoints : dataPoints,
+        }]
+		});
+		chart.render();
+        }, 
+        error: function(xhr, textStatus, errorThrown){ 
+            alert("Unable to fetch Server data");             	 	
+        }
+    }); 
+}
+
+</script>
+</head>
+
+<body>
+	<div id="chart">
+	<a href="#" class="myButton" onclick="getBiodiversityChart()">Show Biodiversity Chart</a>
+	<a href="#" class="myButton" onclick="getDeforestationChart()">Show Deforestation Chart</a>
+	
+	
+	<div id="chartContainer" style="height: 450px; width: 100%;">
+	</div>
+	</div>
+</body>
+</html>
