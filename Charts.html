@@ -87,7 +87,7 @@
 		interval: 2
 		},
 		axisY: {
-        title: "Value",
+        title: "Biodiversity Index",
 		fontSize:20,
 		labelFontSize: 15,
 		labelFontColor: "black",
@@ -153,7 +153,7 @@ function getDeforestationChart() {
 		height: 600,
         animationEnabled: true,
 		axisX: {
-		title: "Parks",
+		title: "Deforestation Index",
 		labelAngle: -60,
 		labelFontSize: 15,
 		labelFontColor: "black",
@@ -173,8 +173,7 @@ function getDeforestationChart() {
 		data: [{
         type: "column",
 		color: "#cc0000",
-		dataPoints : dataPoints,
-		toolTipContent: "x: {x}, y: {y}"
+		dataPoints : dataPoints
         }]
 		});
 		chart.render();
