@@ -86,8 +86,10 @@ map.on('overlayadd' , function(layer){
     if(layer.name == 'Parks'){
         //remove existing temporary parks if exist 
         //created by search criteria result
-        //removeTemporaryParks();
-        L.addLayer(natural_reserves);
+        removeTemporaryParks();
+
+        //zooming in to parks bounds
+        map.fitBounds(natural_reserves.getBounds());
     }  
 });
 
