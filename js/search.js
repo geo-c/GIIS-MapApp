@@ -60,7 +60,7 @@ function insertParks(listOfParks) {
     
     //Sort all animals into the specific category
     for(i in listOfParks) {
-        $('<tr><td onclick="openModal(this.innerHTML)">' + listOfParks[i].parkname.value + '</td></tr>').insertAfter('#parks');
+        $('<tr><td>' + listOfParks[i].parkname.value + '</td></tr>').insertAfter('#parks');
     }
     if(listOfParks.length ==0){
         $('#sidebar').html('<h3 id="head">Parks Not Found</h3>')
