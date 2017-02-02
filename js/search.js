@@ -1,4 +1,14 @@
 $(function(){
+
+    //global variable to store parklists for a query to be used in filter
+    var listOfParks;
+
+
+    var filteredParks;
+
+    /**
+     * @desc send request to server and retrieve parks having requested specie
+     */
     $('#search').click(function(){
         var text = $('#search_text').val();
         
@@ -18,9 +28,11 @@ $(function(){
         success: function(result){
             
             var parks_obtained = result.results.bindings;
+
+            listOfParks = parks_obtained;
             //alert(parks_obtained[0].parkname.value);
             insertParks(parks_obtained);
-
+            updateMapLayer(parks_obtained);
         }, 
         error: function(xhr, textStatus, errorThrown){ 
             alert("Unable to fetch Server data");             	 	
@@ -74,6 +86,7 @@ $(function(){
         var specielist = result.results.bindings;
        // alert(specielist[0].specielist.value);
         prepareDataList(specielist);
+       
 
 
     }, 
@@ -87,6 +100,58 @@ $(function(){
             $('#specieslist').append('<option value="'+specielist[i].specielist.value+'">');
         }
         
+    }
+
+    function updateMapLayer(parkList){
+        //Temporarily removeLayer from map
+        //but remains in control group
+        console.log("removing layer");
+        map.removeLayer( natural_reserves);
+
+        //removing existing temporary layer
+        removeTemporaryParks();
+            
+       
+        //create a new later with matching parks name from Parliamant
+        filteredParks = L.geoJson(
+                                natReserves,
+                                {style : reservesStyle,
+                                onEachFeature: onEachFeature,
+                                filter:applyFilter
+                                });
+        //adding layer to map                       
+        map.addLayer(filteredParks);
+
+        //zoom map to parks
+        map.fitBounds(filteredParks.getBounds());
+
+        //Allow user to get back to default
+    }
+
+    /**
+     * @desc returns true if parks name of feature is found in list retrieved from server
+     */
+    function applyFilter(feature){
+        //console.log(listOfParks[1].parkname.value);
+
+        for(i in listOfParks){
+            if(feature.properties.Name==listOfParks[i].parkname.value) return true;
+        }
+
+        return false;
+
+        
+    }
+
+    /**
+     * @desc removes the result overlays of previously retrieved parks
+     */
+    function removeTemporaryParks(){
+          //removing existing temporary layer
+       if(filteredParks!=null){
+           console.log("removing temporary layer");
+           map.removeLayer(filteredParks);
+       }
     }
 
 

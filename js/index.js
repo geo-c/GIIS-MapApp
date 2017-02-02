@@ -24,12 +24,16 @@ var myStyle = {
     "weight": 0.5,
     "opacity": 0.65
 };
+
+//add json layer by styling and registering event for each park
 var natural_reserves = L.geoJson(
 	
     natReserves,
 	{style : reservesStyle,
     onEachFeature: onEachFeature
     });
+
+//adding legend    
 addLegend();
 
 var def = function()
@@ -52,15 +56,11 @@ document.getElementById('bio').onclick = bio;
 
 
 map.addLayer(light);
+
+//adding parks layer
 map.addLayer(natural_reserves);
 
-//creating natural reserves layer based on geojson
-
-
-
-
-
-map.addLayer(natural_reserves);
+//zooming in to parks bounds
 map.fitBounds(natural_reserves.getBounds());
 
 //restrict map to area of interest only
@@ -73,7 +73,7 @@ var baseMaps = {
       
 };
 
-var overlayMaps = {
+let overlayMaps = {
     "Parks": natural_reserves,
     //"HeatMap": heat_layer Makes no sence with polygons
 };
@@ -81,12 +81,15 @@ var overlayMaps = {
 //Creating a layer control and adding it to map
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-// map.on('overlayadd' , function(layer){
+map.on('overlayadd' , function(layer){
    
-//     // if(layer.name == 'Parks'){
-//     //     L.addLayer(natural_reserves);
-//     // }  
-// });
+    if(layer.name == 'Parks'){
+        //remove existing temporary parks if exist 
+        //created by search criteria result
+        //removeTemporaryParks();
+        L.addLayer(natural_reserves);
+    }  
+});
 
 
 
