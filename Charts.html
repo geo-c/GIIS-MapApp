@@ -1,8 +1,19 @@
 <!DOCTYPE HTML>
 <html>
-<head>  
+<head>
+     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+     <script src="bootstrap/js/bootstrap.min.js"></script>	 
 	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/canvasjs.min.js"></script>
+	<!-- bootstrap-select Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
+
+    <!-- bootstrap-select Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+
+    <!-- bootstrap-select (Optional) Latest compiled and minified JavaScript translation files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/i18n/defaults-*.min.js"></script>
+	
 	<style>
 	.myButton {
 	background-color:#44c767;
@@ -33,10 +44,10 @@
     $(document).ready(function(){
 	$('#filter').hide();
 	var display = document.getElementById('filter');
-	display.innerHTML = "<form><center><b>Choose an option:</b><br><select id ='DI' style = 'height:25px; width:100px'><option value='='>Select</option><option value='>'>greater than</option><option value='<'>less than</option></select><br><br><b>Value:</b><br><input id='Index' type='text'  style='width:100px;'></center><br><br></form>";
+	display.innerHTML = "<form><center><b>Choose an option:</b><br><select id ='DI'  style = 'height:25px; width:100px'><option value='='>Select</option><option value='>'>greater than</option><option value='<'>less than</option></select><br><br><b>Value:</b><br><input id='Index' type='text'  style='width:100px;'></center><br><br></form>";
 	});
 	
-	
+	var inter;
 	var user_input;
 	var user_option;
 	function getBiodiversityChart() {
@@ -57,19 +68,24 @@
 		for (var i in result.results.bindings){
 		var prk = result.results.bindings[i].n.value;
         var bdind = parseFloat(result.results.bindings[i].value.value);
+		var count = result.results.bindings[i].count.value;
 		if(user_option=='>'){
 			 if(bdind > user_input){
-		        dataPoints.push({label: prk, y: bdind});
+		        dataPoints.push({label: prk, y: bdind,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
 			 }
 		 }
 		 else if(user_option=='<'){
 			 if(bdind < user_input){
-		        dataPoints.push({label: prk, y: bdind});
+		        dataPoints.push({label: prk, y: bdind,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
 			 }
 		 }
-		 else dataPoints.push({label: prk, y: bdind});
+		 else {dataPoints.push({label: prk, y: bdind, toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
+		       }
 		}
 		
+		inter=dataPoints.length;
+		if(inter==49){inter=2;}
+		else {inter=1;}
 		var chart = new CanvasJS.Chart("chartContainer",{
         title:{
             text:"Biodiversity Index of the Parks",
@@ -84,10 +100,10 @@
 		labelFontColor: "black",
 		titleFontSize: 20,
 		titleFontColor: "black",
-		interval: 2
+		interval: inter
 		},
 		axisY: {
-        title: "Biodiversity Index",
+        title: "Value",
 		fontSize:20,
 		labelFontSize: 15,
 		labelFontColor: "black",
@@ -98,7 +114,7 @@
 		data: [{
         type: "column",
 		color: "#40bf80",
-        dataPoints : dataPoints,
+        dataPoints : dataPoints
         }]
 		});
 		chart.render();
@@ -119,7 +135,6 @@ function getDeforestationChart() {
 	var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?p ?value ?n ?count\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?p prop:hasProperty ?parks.\n?p foaf:name ?n.\n?parks uco:propertyName "DeforestationIndex".\n?parks gr:hasValue ?value.\n?p pr:SIO_000955.rdf ?sp.\n?sp pr:SIO_000794.rdf ?count.}\n}order By ?n';
 
     var dataPoints = [];
-	var count_arr = [];
 	$.ajax({
         url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
         method: "GET",
@@ -133,17 +148,19 @@ function getDeforestationChart() {
 		var count = parseFloat(result.results.bindings[i].count.value);
 		if(user_option=='>'){
 			 if(defInd > user_input){
-		        dataPoints.push({label: prk, y: defInd});
+		        dataPoints.push({label: prk, y: defInd,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
 			 }
 		 }
 		 else if(user_option=='<'){
 			 if(defInd < user_input){
-		        dataPoints.push({label: prk, y: defInd});
+		        dataPoints.push({label: prk, y: defInd,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
 			 }
 		 }
-		 else dataPoints.push({label: prk, y:defInd});
+		 else dataPoints.push({label: prk, y:defInd, toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
 		}
-		
+		inter=dataPoints.length;
+		if(inter==49){inter=2;}
+		else {inter=1;}
 		var chart = new CanvasJS.Chart("chartContainer",{
         title:{
             text:"Deforestation Index of the Parks",
@@ -153,13 +170,13 @@ function getDeforestationChart() {
 		height: 600,
         animationEnabled: true,
 		axisX: {
-		title: "Deforestation Index",
+		title: "Parks",
 		labelAngle: -60,
 		labelFontSize: 15,
 		labelFontColor: "black",
 		titleFontSize: 20,
 		titleFontColor: "black",
-		interval: 2
+		interval: inter
 		},
 		axisY: {
         title: "Value",
@@ -192,10 +209,22 @@ function getDeforestationChart() {
 </head>
 
 <body>
+   <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="#">Wildlife Colombia</a>
+            </div>
+     
+            <form class="navbar-form navbar-left">
+            <a href="#" class="myButton" onclick="getBiodiversityChart()">Show Biodiversity Chart</a>
+			<a href="#" class="myButton" onclick="getDeforestationChart()">Show Deforestation Chart</a>
+			<a href="#" class="myButton" onclick="getFilterDisplay()">Apply Filter</a>
+			<a href="index.html" class="btn btn-default">Go to Map</a>
+            </form>
+        </div>
+    </nav>
 	<div id="chart" >
-	<a href="#" class="myButton" onclick="getBiodiversityChart()">Show Biodiversity Chart</a>
-	<a href="#" class="myButton" onclick="getDeforestationChart()">Show Deforestation Chart</a>
-	<a href="#" class="myButton" onclick="getFilterDisplay()">Apply Filter</a>
+	
 	<br>
 	<br>
 	<br>
@@ -203,7 +232,7 @@ function getDeforestationChart() {
 	<center><div id="chartContainer" style="height: 450px; width: 90%;">
 	</div></center>
 	</div>
-	<div id = "filter" style=" margin-left:45%; z-index:100;top:1vw; position:absolute; height:450px; width:20% ">
+	<div id = "filter" style=" margin-left:45%; z-index:100;top:5vw; position:absolute; height:450px; width:20% ">
 	</div>
 </body>
 </html>
