@@ -1,61 +1,38 @@
+"use strict";
 
-//init map
-var map;
-map = new L.Map('map');
-
+var currentLayer;
 // create the tile layer with correct attribution
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 12, attribution: osmAttrib});
-
-//Enhanced Basemap using MapBox
 var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibmdhdmlzaCIsImEiOiJjaXFheHJmc2YwMDdoaHNrcWM4Yjhsa2twIn0.8i1Xxwd1XifUU98dGE9nsQ';
+//grey basemap from mapbox
+var greyscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
+	dark = L.tileLayer(mbUrl, {id: 'mapbox.dark', attribution: mbAttr});
 
-var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
-	satellite = L.tileLayer(mbUrl, {id: 'mapbox.satellite', attribution: mbAttr}),
-	dark = L.tileLayer(mbUrl, {id: 'mapbox.dark', attribution: mbAttr}),
-	light = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr});
 var legend = L.control({position: 'bottomright'});
-var myStyle = {
-    "color": "#ff7800",
-    "weight": 0.5,
-    "opacity": 0.65
+
+var overlayMaps = {
+    "Biodiversity": L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature}),
+    "Deforestation Index": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
 };
 
 //add json layer by styling and registering event for each park
 var natural_reserves = L.geoJson(
-	
     natReserves,
-	{style : reservesStyle,
-    onEachFeature: onEachFeature
-    });
+	{
+        style : reservesStyle,
+        onEachFeature: onEachFeature
+    }
+);
 
-//adding legend    
-addLegend();
-
-var def = function()
-{   
-    natural_reserves.setStyle(reservesStyle)
-    addLegend();
-    
-}
-
-
-var bio = function()
-{   
-    natural_reserves.setStyle(reservesStyle2)
-    addLegend2();
-    
-}
-
-document.getElementById('def').onclick = def;
-document.getElementById('bio').onclick = bio;
-
-
-map.addLayer(light);
+//init map
+var map = new L.Map('map', {
+    layers: [osm]
+});
 
 //adding parks layer
 map.addLayer(natural_reserves);
@@ -69,20 +46,17 @@ map.setMaxBounds(natural_reserves.getBounds());
 var baseMaps = {
     "OpenStreetMap": osm,
     "Dark Basemap":dark,
-    "Light Basemap":light,
+    "Light Basemap":greyscale,
       
 };
 
-let overlayMaps = {
-    "Parks": natural_reserves,
-    //"HeatMap": heat_layer Makes no sence with polygons
-};
 
 //Creating a layer control and adding it to map
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-map.on('overlayadd' , function(layer){
-   
+map.on('overlayadd', function(layer){
+
+    currentLayer = layer;
     if(layer.name == 'Parks'){
         //remove existing temporary parks if exist 
         //created by search criteria result
@@ -93,25 +67,30 @@ map.on('overlayadd' , function(layer){
     }  
 });
 
-
-
-
-
-//map.on('click', onMapClick);
-
-
-function onMapClick(e) {
-	var popup = L.popup()
-				.setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
-}
-
-
+map.on('overlayremove', function(layer) {
+    currentLayer = null;
+})
 
 function reservesStyle(feature) {
+    if(currentLayer != undefined) {
+        if(currentLayer.name == "Biodiversity") return reservesStyleBio(feature);
+        else if(currentLayer.name == "Deforestation Index") return reservesStyleDeforest(feature);
+    }
+    else
     return {
-        fillColor: getColor(feature.properties.Deforestat),
+        fillColor: '#008000',
+        weight: 0.5,
+        opacity: 1,
+        color: '#FFFFFF',
+        dashArray: '3',
+        fillOpacity: 0.6
+    }
+}
+
+function reservesStyleDeforest(feature) {
+    //addLegendDeforest();
+    return {
+        fillColor: getColorDeforest(feature.properties.Deforestat),
         weight: 0.5,
         opacity: 1,
         color: 'white',
@@ -120,7 +99,7 @@ function reservesStyle(feature) {
     };
 }
 
-function getColor(deforestation) {
+function getColorDeforest(deforestation) {
         return deforestation >=10.1  ?'#E31A1C' :
            deforestation >=5.9   ?'#FC4E2A' :
            deforestation >=3.5   ?'#FFFF00'    :
@@ -129,9 +108,7 @@ function getColor(deforestation) {
                       '#A3FF73';
 }
 
-function addLegend(){
-    
-	
+function addLegendDeforest(){
 
 	legend.onAdd = function (map) {
 
@@ -142,9 +119,7 @@ function addLegend(){
 		// loop through our density intervals and generate a label with a colored square for each interval
         div.innerHTML +='<strong>Deforestation Index</strong><br>';
 		for (var i = 0; i < grades.length; i++) {
-			div.innerHTML +='<p><i style="background:' + getColor(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
-				//'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-				//grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+			div.innerHTML +='<p><i style="background:' + getColorDeforest(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
 		}
 
 		return div;
@@ -155,9 +130,10 @@ function addLegend(){
 
 
 
-function reservesStyle2(feature) {
+function reservesStyleBio(feature) {
+    //addLegendBio();
     return {
-        fillColor: getColor2(feature.properties.bio),
+        fillColor: getColorBio(feature.properties.bio),
         weight: 0.5,
         opacity: 1,
         color: 'white',
@@ -166,7 +142,7 @@ function reservesStyle2(feature) {
     };
 }
 
-function getColor2(Biodiversity) {
+function getColorBio(Biodiversity) {
         return Biodiversity >=0.98  ?'#071DAD' :
            Biodiversity >=0.59  ?'#9400D3' :
            Biodiversity >=0.32  ?'#FF0000'    :
@@ -175,10 +151,7 @@ function getColor2(Biodiversity) {
                       '#A3FF73';
 }
 
-function addLegend2(){
-    
-    
-	
+function addLegendBio(){
     
 	legend.onAdd = function (map) {
 
@@ -189,9 +162,7 @@ function addLegend2(){
 		// loop through our density intervals and generate a label with a colored square for each interval
         div.innerHTML +='<strong>Biodiversity Index</strong><br>';
 		for (var i = 0; i < grades.length; i++) {
-			div.innerHTML +='<p><i style="background:' + getColor2(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
-				//'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-				//grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+			div.innerHTML +='<p><i style="background:' + getColorBio(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
 		}
 
 		return div;
@@ -199,9 +170,6 @@ function addLegend2(){
 
 	legend.addTo(map);
 }
-
-
-
 
 //interaction event
 function highlightFeature(e) {
@@ -217,12 +185,7 @@ function highlightFeature(e) {
         layer.bringToFront();
     }
 
-	//match parkname and send the value based on downloaded values
-
-	console.log("area is "+ getArea(layer.feature.properties.Name));
-
-	//area retrieved
-	
+	//area retrieved	
 	var area = getArea(layer.feature.properties.Name);
 
 	 info.update(layer.feature.properties,area);
@@ -233,7 +196,7 @@ function resetHighlight(e) {
 	info.update();
 	
 }
-//TODO hand over the name of the current park
+
 var customPopup = "<table><tr><td><center><b>Birds</b></center></td><td><center><b>Mammals</b></center></td></tr><tr><td><a href='#11'><img src='https://i.ytimg.com/vi/Dbo3eoNN5tc/maxresdefault.jpg' height='70px' width='80px' onclick = 'getAnimals(" + '"Bird"' + ", currentPark);'/></a></td><td><a href='#2'><img src='http://www.animalspot.net/wp-content/uploads/2013/01/Mammals-Hair.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Mammal"' + ", currentPark);' /></a></td></tr><tr><td><center><b>Reptiles</b></center></td><td><center><b>Amphibians</b></center></td></tr><tr><td><a href ='#3'><img src='http://www.naturephoto-cz.com/img/reptiles.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Reptile"' + ", currentPark);' /></td><td></a><a href='#4'><img src='http://www.kidzone.ws/animals/images/amphibian1a.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Amphibian"' + ", currentPark);'/></a></td></tr></table>";
 
 var currentPark;
@@ -276,5 +239,3 @@ info.update = function (props,area) {
 };
 
 info.addTo(map);
-
-
