@@ -29,7 +29,7 @@ var groupedOverlays = {
       "Indices": {
         "None": natural_reserves,
         "Biodiversity": L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature}),
-        "Deforestation Index": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
+        "Deforestation": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
       }
 };
 
