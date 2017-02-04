@@ -44,7 +44,7 @@
             text:"Biodiversity Index of the Parks",
 			fontSize:15
         },
-		height: 450,
+		height: 430,
         animationEnabled: true,
 		axisX: {
 		title: "Parks",
@@ -123,7 +123,7 @@ function getDeforestationChart() {
 			fontSize:15
         },
         animationEnabled: true,
-		height: 450,
+		height: 430,
         animationEnabled: true,
 		axisX: {
 		title: "Parks",
@@ -199,7 +199,7 @@ function getSocialChart() {
 			fontSize:15
         },
         animationEnabled: true,
-		height: 450,
+		height: 430,
         animationEnabled: true,
 		axisX: {
 		title: "Parks",
