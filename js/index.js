@@ -1,6 +1,6 @@
 "use strict";
 
-var currentLayer;
+var currentLayer = null;
 // create the tile layer with correct attribution
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
@@ -15,11 +15,6 @@ var greyscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
 
 var legend = L.control({position: 'bottomright'});
 
-var overlayMaps = {
-    "Biodiversity": L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature}),
-    "Deforestation Index": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
-};
-
 //add json layer by styling and registering event for each park
 var natural_reserves = L.geoJson(
     natReserves,
@@ -28,6 +23,19 @@ var natural_reserves = L.geoJson(
         onEachFeature: onEachFeature
     }
 );
+
+// group the layer to display them with radio controls
+var groupedOverlays = {
+      "Indices": {
+        "None": natural_reserves,
+        "Biodiversity": L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature}),
+        "Deforestation Index": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
+      }
+};
+
+// specify the radio controls for indices
+var options = {exclusiveGroups: ["Indices"]};
+
 
 //init map
 var map = new L.Map('map', {
@@ -52,10 +60,18 @@ var baseMaps = {
 
 
 //Creating a layer control and adding it to map
-L.control.layers(baseMaps, overlayMaps).addTo(map);
+L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
 
 map.on('overlayadd', function(layer){
 
+    if(layer.name == 'Biodiversity') {
+        natural_reserves.setStyle(reservesStyleBio);
+        addLegendBio();
+    }
+    else if(layer.name == 'Deforestation Index') {
+        natural_reserves.setStyle(reservesStyleDeforest);
+        addLegendDeforest();
+    }
     currentLayer = layer;
     if(layer.name == 'Parks'){
         //remove existing temporary parks if exist 
@@ -69,10 +85,12 @@ map.on('overlayadd', function(layer){
 
 map.on('overlayremove', function(layer) {
     currentLayer = null;
+    natural_reserves.setStyle(reservesStyle);
+    this.removeControl(legend);
 })
 
 function reservesStyle(feature) {
-    if(currentLayer != undefined) {
+    if(currentLayer != null) {
         if(currentLayer.name == "Biodiversity") return reservesStyleBio(feature);
         else if(currentLayer.name == "Deforestation Index") return reservesStyleDeforest(feature);
     }
@@ -164,10 +182,9 @@ function addLegendBio(){
 		for (var i = 0; i < grades.length; i++) {
 			div.innerHTML +='<p><i style="background:' + getColorBio(grades[i] )+ '; float: left; "></i>   '+" "+'&lt'+grades[i ] +'</p>';
 		}
-
 		return div;
 	};
-
+    
 	legend.addTo(map);
 }
 
