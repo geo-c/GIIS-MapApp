@@ -68,7 +68,7 @@ map.on('overlayadd', function(layer){
         natural_reserves.setStyle(reservesStyleBio);
         addLegendBio();
     }
-    else if(layer.name == 'Deforestation Index') {
+    else if(layer.name == 'Deforestation') {
         natural_reserves.setStyle(reservesStyleDeforest);
         addLegendDeforest();
     }
@@ -92,7 +92,7 @@ map.on('overlayremove', function(layer) {
 function reservesStyle(feature) {
     if(currentLayer != null) {
         if(currentLayer.name == "Biodiversity") return reservesStyleBio(feature);
-        else if(currentLayer.name == "Deforestation Index") return reservesStyleDeforest(feature);
+        else if(currentLayer.name == "Deforestation") return reservesStyleDeforest(feature);
     }
     else
     return {
@@ -106,7 +106,6 @@ function reservesStyle(feature) {
 }
 
 function reservesStyleDeforest(feature) {
-    //addLegendDeforest();
     return {
         fillColor: getColorDeforest(feature.properties.Deforestat),
         weight: 0.5,
@@ -149,7 +148,6 @@ function addLegendDeforest(){
 
 
 function reservesStyleBio(feature) {
-    //addLegendBio();
     return {
         fillColor: getColorBio(feature.properties.bio),
         weight: 0.5,
