@@ -94,5 +94,5 @@ function getCharts(){
 	
 	$('#iframe').attr("src","Charts.html");
 	$('#iframe').attr("scrolling","no");
-	$('#iframe').removeClass("iframe-class-resize").css({ width : '1050px', height : '38vw' });
+	$('#iframe').removeClass("iframe-class-resize").css({ width : '84vw', height : '35vw' });
 }
