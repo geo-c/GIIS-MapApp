@@ -1,34 +1,28 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-     <script src="bootstrap/js/bootstrap.min.js"></script>	 
+     
 	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/canvasjs.min.js"></script>
-	<!-- bootstrap-select Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
-
-    <!-- bootstrap-select Latest compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-
-    <!-- bootstrap-select (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/i18n/defaults-*.min.js"></script>
-	
+	<script src="js/chart.js"></script>
 	<style>
 	.myButton {
-	background-color:#44c767;
-	-moz-border-radius:25px;
+	background-color:#10287e;
+	-moz-border-radius:5px;
 	-webkit-border-radius:25px;
-	border-radius:25px;
+	border-radius:5px;
 	border:1px solid #18ab29;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
 	font-family:Verdana;
-	font-size:14px;
+	font-size:11px;
 	font-weight:bold;
-	padding:14px 14px;
+	padding:10px 10px;
+	width:75px;
 	text-decoration:none;
+	text-align: center;
+    margin: auto;
 	text-shadow:0px 0px 0px #2f6627;
 	}
 	.myButton:hover {
@@ -39,200 +33,34 @@
 	top:1px;
 	}
 	</style>
-	
-	<script type="text/javascript">
-    $(document).ready(function(){
-	$('#filter').hide();
-	var display = document.getElementById('filter');
-	display.innerHTML = "<form><center><b>Choose an option:</b><br><select id ='DI'  style = 'height:25px; width:100px'><option value='='>Select</option><option value='>'>greater than</option><option value='<'>less than</option></select><br><br><b>Value:</b><br><input id='Index' type='text'  style='width:100px;'></center><br><br></form>";
-	});
-	
-	var inter;
-	var user_input;
-	var user_option;
-	function getBiodiversityChart() {
-	$('#filter').hide();
-		 user_input=$("#Index").val();
-		 user_input=parseFloat(user_input);
-		 user_option=$("#DI").val();
-	var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?p ?value ?n ?count\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?p prop:hasProperty ?parks.\n?p foaf:name ?n.\n?parks uco:propertyName "BiodiversityIndex".\n?parks gr:hasValue ?value.\n?p pr:SIO_000955.rdf ?sp.\n?sp pr:SIO_000794.rdf ?count.}\n}order By ?n';
-
-    var dataPoints = [];
-	$.ajax({
-        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
-        method: "GET",
-        dataType: "jsonp",
-        async:false,
-        success: function(result){
-		//console.log(result);
-		for (var i in result.results.bindings){
-		var prk = result.results.bindings[i].n.value;
-        var bdind = parseFloat(result.results.bindings[i].value.value);
-		var count = result.results.bindings[i].count.value;
-		if(user_option=='>'){
-			 if(bdind > user_input){
-		        dataPoints.push({label: prk, y: bdind,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
-			 }
-		 }
-		 else if(user_option=='<'){
-			 if(bdind < user_input){
-		        dataPoints.push({label: prk, y: bdind,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
-			 }
-		 }
-		 else {dataPoints.push({label: prk, y: bdind, toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+bdind});
-		       }
-		}
-		
-		inter=dataPoints.length;
-		if(inter==49){inter=2;}
-		else {inter=1;}
-		var chart = new CanvasJS.Chart("chartContainer",{
-        title:{
-            text:"Biodiversity Index of the Parks",
-			fontSize:30
-        },
-		height: 600,
-        animationEnabled: true,
-		axisX: {
-		title: "Parks",
-		labelAngle: -60,
-		labelFontSize: 15,
-		labelFontColor: "black",
-		titleFontSize: 20,
-		titleFontColor: "black",
-		interval: inter
-		},
-		axisY: {
-        title: "Value",
-		fontSize:20,
-		labelFontSize: 15,
-		labelFontColor: "black",
-		titleFontSize: 20,
-		titleFontColor: "black"
-		},
-		theme: "theme1",
-		data: [{
-        type: "column",
-		color: "#40bf80",
-        dataPoints : dataPoints
-        }]
-		});
-		chart.render();
-			
-			//var info = result.results.bindings;
-        }, 
-        error: function(xhr, textStatus, errorThrown){ 
-            alert("Unable to fetch Server data");             	 	
-        }
-    }); 
-}
-
-function getDeforestationChart() {
-	$('#filter').hide();
-	     user_input=$("#Index").val();
-		 user_input=parseFloat(user_input);
-		 user_option=$("#DI").val();
-	var query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX wo: <http://purl.org/ontology/wo/>\nPREFIX bio: <http://purl.org/NET/biol/ns#>\nPREFIX txn: <http://lod.taxonconcept.org/ontology/txn.owl#>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX dp:<http://dbpedia.org/page/>\nPREFIX wd: <http://purl.org/ontology/wo/>\nPREFIX loc: <http://www.ontotext.com/proton/protontop#>\nPREFIX mea:<http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#>\nPREFIX prop:<https://purl.oclc.org/NET/ssnx/ssn#>\nPREFIX park:<http://course.geoinfo2016.org/G2/>\nPREFIX pr:<http://semanticscience.org/resource/>\nPREFIX uco:<http://ontologies.makolab.com/uco/ns.html#>\nPREFIX gr:<http://purl.org/goodrelations/v1#>\nSelect ?p ?value ?n ?count\nWhere\n{\ngraph <http://course.geoinfo2016.org/G2>{\n?p prop:hasProperty ?parks.\n?p foaf:name ?n.\n?parks uco:propertyName "DeforestationIndex".\n?parks gr:hasValue ?value.\n?p pr:SIO_000955.rdf ?sp.\n?sp pr:SIO_000794.rdf ?count.}\n}order By ?n';
-
-    var dataPoints = [];
-	$.ajax({
-        url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
-        method: "GET",
-        dataType: "jsonp",
-        async:false,
-        success: function(result){
-		//console.log(result);
-		for (var i in result.results.bindings){
-		var prk = result.results.bindings[i].n.value;
-        var defInd = parseFloat(result.results.bindings[i].value.value);
-		var count = parseFloat(result.results.bindings[i].count.value);
-		if(user_option=='>'){
-			 if(defInd > user_input){
-		        dataPoints.push({label: prk, y: defInd,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
-			 }
-		 }
-		 else if(user_option=='<'){
-			 if(defInd < user_input){
-		        dataPoints.push({label: prk, y: defInd,toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
-			 }
-		 }
-		 else dataPoints.push({label: prk, y:defInd, toolTipContent: "<br>Count of Species: " +count +"<br>"+prk+":"+defInd});
-		}
-		inter=dataPoints.length;
-		if(inter==49){inter=2;}
-		else {inter=1;}
-		var chart = new CanvasJS.Chart("chartContainer",{
-        title:{
-            text:"Deforestation Index of the Parks",
-			fontSize:30
-        },
-        animationEnabled: true,
-		height: 600,
-        animationEnabled: true,
-		axisX: {
-		title: "Parks",
-		labelAngle: -60,
-		labelFontSize: 15,
-		labelFontColor: "black",
-		titleFontSize: 20,
-		titleFontColor: "black",
-		interval: inter
-		},
-		axisY: {
-        title: "Value",
-		fontSize:20,
-		labelFontSize: 15,
-		labelFontColor: "black",
-		titleFontSize: 20,
-		titleFontColor: "black"
-		},
-		theme: "theme1",
-		data: [{
-        type: "column",
-		color: "#cc0000",
-		dataPoints : dataPoints
-        }]
-		});
-		chart.render();
-        }, 
-        error: function(xhr, textStatus, errorThrown){ 
-            alert("Unable to fetch Server data");             	 	
-        }
-    }); 
-}
-
- function getFilterDisplay(){
-   $('#filter').show();
- }    
-
-</script>
 </head>
 
 <body>
-   <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-            <a class="navbar-brand" href="#">Wildlife Colombia</a>
-            </div>
-     
-            <form class="navbar-form navbar-left">
-            <a href="#" class="myButton" onclick="getBiodiversityChart()">Show Biodiversity Chart</a>
-			<a href="#" class="myButton" onclick="getDeforestationChart()">Show Deforestation Chart</a>
-			<a href="#" class="myButton" onclick="getFilterDisplay()">Apply Filter</a>
-			<a href="index.html" class="btn btn-default">Go to Map</a>
-            </form>
-        </div>
-    </nav>
-	<div id="chart" >
 	
-	<br>
-	<br>
-	<br>
-	<br>
-	<center><div id="chartContainer" style="height: 450px; width: 90%;">
-	</div></center>
+	<div id="chartContainer" style="height: 20vw; width: 80%;">
 	</div>
-	<div id = "filter" style=" margin-left:45%; z-index:100;top:5vw; position:absolute; height:450px; width:20% ">
+	
+	
+	<div id = "filter" style=" margin-left:80%; z-index:100;top:5vw; position:absolute; height:450px; width:20% ">
+	<p style="font-family: sans-serif;">Please fill in the required options:</p>
+	<form>
+	<center style="font-family: sans-serif;"><b>Choose an option:</b>
+	<br>
+	<select id ='DI'  style = 'height:25px; width:100px'>
+	<option value='='>Select</option>
+	<option value='>'>greater than</option>
+	<option value='<'>less than</option>
+	</select>
+	<br><br>
+	<b>Value:</b>
+	<br><input id='Index' type='text'  style='width:100px;'>
+	</center>
+	<br><br>
+	<a href='#' class='myButton' onclick='getBiodiversityChart()'>Biodiversity Index</a>
+	<a href='#' class='myButton' onclick='getDeforestationChart()'>Deforestation Index</a>	
+	<a href='#' class='myButton' onclick='getSocialChart()'>Social Index</a>
+	</form>
 	</div>
 </body>
 </html>
+
