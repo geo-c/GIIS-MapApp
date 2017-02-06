@@ -24,12 +24,14 @@ var natural_reserves = L.geoJson(
     }
 );
 
+var biodiversity_layer = L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature});
+var deforestation_layer = L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature});
 // group the layer to display them with radio controls
 var groupedOverlays = {
       "Indices": {
         "None": natural_reserves,
-        "Biodiversity": L.geoJson(natReserves, {style: reservesStyleBio, onEachFeature: onEachFeature}),
-        "Deforestation": L.geoJson(natReserves, {style: reservesStyleDeforest, onEachFeature: onEachFeature})
+        "Biodiversity": biodiversity_layer ,
+        "Deforestation": deforestation_layer
       }
 };
 

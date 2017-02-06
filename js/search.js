@@ -102,11 +102,14 @@ function prepareDataList(specielist){
 }
 
 function updateMapLayer(parkList){
-    //Temporarily removeLayer from map
+    
+    //Temporarily unselect layers from map
     //but remains in control group
     console.log("removing layer");
     map.removeLayer( natural_reserves);
-
+    map.removeLayer( biodiversity_layer);
+    map.removeLayer( deforestation_layer);
+    
     //removing existing temporary layer
     removeTemporaryParks();
         
