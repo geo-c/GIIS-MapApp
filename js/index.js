@@ -63,7 +63,6 @@ var baseMaps = {
 L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
 
 map.on('overlayadd', function(layer){
-
     if(layer.name == 'Biodiversity') {
         natural_reserves.setStyle(reservesStyleBio);
         addLegendBio();
@@ -73,21 +72,20 @@ map.on('overlayadd', function(layer){
         addLegendDeforest();
     }
     currentLayer = layer;
-    if(layer.name == 'Parks'){
+    if(layer.name == 'None'){
+        currentLayer = null;
+        natural_reserves.setStyle(reservesStyle);
         //remove existing temporary parks if exist 
         //created by search criteria result
+        console.log('in function');
         removeTemporaryParks();
+        this.removeControl(legend);
 
         //zooming in to parks bounds
         map.fitBounds(natural_reserves.getBounds());
     }  
 });
 
-map.on('overlayremove', function(layer) {
-    currentLayer = null;
-    natural_reserves.setStyle(reservesStyle);
-    this.removeControl(legend);
-})
 
 function reservesStyle(feature) {
     if(currentLayer != null) {
