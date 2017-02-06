@@ -175,10 +175,12 @@ searchControl.on('search:locationfound', function(e) {
     if(e.layer._popup)
         e.layer.openPopup();
 
-}).on('search:collapsed', function(e) {
+});
 
-    featuresLayer.eachLayer(function(layer) {	//restore feature color
-        featuresLayer.resetStyle(layer);
+searchControl.on('search:collapsed', function(e) {
+
+    natural_reserves.eachLayer(function(layer) {	//restore feature color
+        natural_reserves.resetStyle(layer);
     });	
 });
 
