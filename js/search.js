@@ -157,5 +157,32 @@ function removeTemporaryParks(){
 }
 
 
+//adding search-layer support using leaflet-search plugin
+var searchControl = new L.Control.Search({
+		layer: natural_reserves,
+		propertyName: 'Name',
+		circleLocation: false,
+		moveToLocation: function(latlng, title, map) {
+			//map.fitBounds( latlng.layer.getBounds() );
+			var zoom = map.getBoundsZoom(latlng.layer.getBounds());
+  			map.setView(latlng, zoom); // access the zoom
+		}
+	});
+
+searchControl.on('search:locationfound', function(e) {
+    
+    e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+    if(e.layer._popup)
+        e.layer.openPopup();
+
+}).on('search:collapsed', function(e) {
+
+    featuresLayer.eachLayer(function(layer) {	//restore feature color
+        featuresLayer.resetStyle(layer);
+    });	
+});
+
+
+map.addControl( searchControl );
 
 
