@@ -229,7 +229,7 @@ searchControl.on('search:locationfound', function(e) {
     //     e.layer.openPopup();
 
 }).on('search:collapsed', function(e) {
-    alert("collapsed");
+    
     natural_reserves.eachLayer(function(layer) {	//restore feature color
         natural_reserves.resetStyle(layer);
     });	
