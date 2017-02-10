@@ -26,6 +26,10 @@
   },
   "homepage": "https://github.com/saadsarfrazz/GIIS-MapApp#readme",
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-select": "^1.12.2",
+    "leaflet": "^1.0.3",
+    "leaflet-groupedlayercontrol": "^0.5.0",
     "leaflet-search": "^2.7.0"
   }
 }
