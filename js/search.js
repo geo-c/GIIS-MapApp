@@ -214,6 +214,7 @@ var searchControl = new L.Control.Search({
 		layer: natural_reserves,
 		propertyName: 'Name',
 		circleLocation: false,
+        marker: false, 
 		moveToLocation: function(latlng, title, map) {
 			//map.fitBounds( latlng.layer.getBounds() );
 			var zoom = map.getBoundsZoom(latlng.layer.getBounds());
@@ -224,13 +225,11 @@ var searchControl = new L.Control.Search({
 searchControl.on('search:locationfound', function(e) {
     
     e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-    if(e.layer._popup)
-        e.layer.openPopup();
+    // if(e.layer._popup)
+    //     e.layer.openPopup();
 
-});
-
-searchControl.on('search:collapsed', function(e) {
-
+}).on('search:collapsed', function(e) {
+    alert("collapsed");
     natural_reserves.eachLayer(function(layer) {	//restore feature color
         natural_reserves.resetStyle(layer);
     });	
