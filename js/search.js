@@ -214,7 +214,7 @@ var searchControl = new L.Control.Search({
 		layer: natural_reserves,
 		propertyName: 'Name',
 		circleLocation: false,
-        marker: false, 
+        marker: false, //disable cicle when zooming 
 		moveToLocation: function(latlng, title, map) {
 			//map.fitBounds( latlng.layer.getBounds() );
 			var zoom = map.getBoundsZoom(latlng.layer.getBounds());
