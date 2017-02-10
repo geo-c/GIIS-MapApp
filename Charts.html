@@ -5,6 +5,12 @@
 	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/canvasjs.min.js"></script>
 	<script src="js/chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/i18n/defaults-*.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	
 	<style>
 	.myButton {
 	background-color:#10287e;
@@ -19,7 +25,6 @@
 	font-size:11px;
 	font-weight:bold;
 	padding:10px 10px;
-	width:75px;
 	text-decoration:none;
 	text-align: center;
     margin: auto;
@@ -32,17 +37,60 @@
 	position:relative;
 	top:1px;
 	}
+	.legend {
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.low {
+  background: #99ff99;
+}
+
+.medium {
+  background: #339933;
+}
+
+.high {
+  background: #003300;
+}
 	</style>
 </head>
 
 <body>
-	
-	<div id="chartContainer" style="height: 20vw; width: 80%;">
-	</div>
-	
-	
-	<div id = "filter" style=" margin-left:80%; z-index:100;top:5vw; position:absolute; height:450px; width:20% ">
-	<p style="font-family: sans-serif;">Please fill in the required options:</p>
+<nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="#">Wildlife Colombia</a>
+            
+            </div>
+            <ul class="nav navbar-nav">
+			<li><a href="About.html">About</a></li>
+            <li><a href="Charts.html">Charts</a></li>
+			<li><a href="index.html">Go to Map</a></li>     
+            </ul>
+        </div>
+    </nav>
+
+      <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="chartContainer" style=" height:500px"></div>
+				<div id="legend"><table>
+				<tr><td style="width:20vw"><div class="legend low"></div><p>Area less than 1000 sq.Km.</p></td>
+                <td style="width:25vw"><div class="legend medium"></div><p>Area from 1000 sq.Km. to 10000 sq.Km.</p></td>
+                <td style="width:20vw"><div class="legend high"></div><p>Area greater than 10000 sq.Km.</p></td></tr></table>
+				</div>
+            </div>
+        </div>
+      </div>
+    
+    <div class="col-md-3" id="sidepanel">
+        <div class="panel panel-default">
+            <div class="panel-body" id="sidebar">
+			<p style="font-family: sans-serif;">Please fill in the required options:</p>
 	<form>
 	<center style="font-family: sans-serif;"><b>Choose an option:</b>
 	<br>
@@ -56,11 +104,13 @@
 	<br><input id='Index' type='text'  style='width:100px;'>
 	</center>
 	<br><br>
-	<a href='#' class='myButton' onclick='getBiodiversityChart()'>Biodiversity Index</a>
-	<a href='#' class='myButton' onclick='getDeforestationChart()'>Deforestation Index</a>	
-	<a href='#' class='myButton' onclick='getSocialChart()'>Social Index</a>
+	<a href='#' class='myButton' style="width:7vw;" onclick='getBiodiversityChart()'>Biodiversity Index</a>
+	<a href='#' class='myButton' style="width:8vw;" onclick='getDeforestationChart()'>Deforestation Index</a>	
+	<a href='#' class='myButton' style="width:7vw;" onclick='getSocialChart()'>Social Index</a>
 	</form>
-	</div>
+            </div>
+        </div>
+    </div
 </body>
 </html>
 
