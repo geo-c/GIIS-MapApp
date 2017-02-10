@@ -73,7 +73,7 @@ function openModal(info) {
     //empty sidebar
     modal_information.innerHTML = '';
     modal.style.display = "block";
-	$('<img src="'+info[0].imgurl.value + '" style="height:150px; "/>').appendTo('#modal_information');
+	$('<img src="'+info[0].imgurl.value + '" style="height:150px;"/>').appendTo('#modal_information');
     $('<h3 id="ScName">' + info[0].commonN.value + '</h3>').appendTo('#modal_information');
     $('<table><center><tr id="ScientificName"><th>Scientific Name</th></tr><tr id="animal_class"><th>Class</th></tr><tr id="status"><th>Status</th></tr></center></table>').insertAfter('#ScName');
     //insert the further information for the animal
@@ -83,16 +83,5 @@ function openModal(info) {
 
     //update the iframe for the specific animal
     $('#iframe').attr("src", "https://en.wikipedia.org/wiki/" + info[0].scientificN.value);
-	$('#iframe').attr("scrolling","yes");
-    $('#iframe').removeClass("iframe-class-resize").css({ width : '100%', height : '500px' });	
 }
 
-function getCharts(){
-	var modal_information = document.getElementById('modal_information');
-    modal_information.innerHTML = '';
-    modal.style.display = "block";
-	
-	$('#iframe').attr("src","Charts.html");
-	$('#iframe').attr("scrolling","no");
-	$('#iframe').removeClass("iframe-class-resize").css({ width : '84vw', height : '35vw' });
-}
