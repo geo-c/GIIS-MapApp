@@ -25,7 +25,7 @@ $('#search').click(function(){
     $.ajax({
     url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
     method: "GET",
-    async:false,
+    //async:false,
     // dataType: "jsonp",
     success: function(result){
         
@@ -63,7 +63,7 @@ $( "select.selectpicker" ).change(function() {
                 $.ajax({
                 url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query),
                 method: "GET",
-                async:false,
+                //async:false,
                 // dataType: "jsonp",
                 success: function(result){
                     
@@ -126,7 +126,7 @@ function prepareDefaultDataList(){
     $.ajax({
         url: 'http://giv-lodumdata.uni-muenster.de:8282/parliament/sparql?output=JSON&query=' + encodeURIComponent(query2),
         method: "GET",
-            async:false,
+            //async:false,
         // dataType: "jsonp",
         success: function(result){
             
