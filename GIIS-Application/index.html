@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Colombian wildlife reserves</title>
+    <!--LEAFLET INCLUDE-->
+    <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css"/>
+    <script src="node_modules/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <script src="node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js"></script>
+    <script src="node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js.map"></script>
+    <link rel="stylesheet" href="node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.css"></link>
+    <!-- INCLUDE Bootstrap -->
+        
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- bootstrap-select Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
+
+    <!-- bootstrap-select Latest compiled and minified JavaScript -->
+    <script src="node_modules/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+
+    <!-- Adding leaflet search plugin-->
+    <link rel="stylesheet" href="node_modules/leaflet-search/dist/leaflet-search.min.css" />
+    <script src="node_modules/leaflet-search/dist/leaflet-search.min.js"></script>
+
+    <!--Load parks layer to overlay-->
+ 	<script src="data/parks.geojson"></script>
+     
+</head>
+<body>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-body row">
+                <div class="col-md-9">
+                    <iframe id="iframe" src="" style="height:35vw; width:100%"></iframe>
+	            </div>
+                <div class="col-md-3" id="modal_information">
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="#">Wildlife Colombia</a>
+            
+            </div>
+            <ul class="nav navbar-nav">
+			<li><a href="About.html">About</a></li>
+            <li><a href="Charts.html">Charts</a></li>
+			<li><a href="index.html">Go to Map</a></li>
+            <li><a href="#">Search Type</a></li>
+            
+            <li  class="dropdown" > 
+                    <div style="margin-top: 8px" class="dropdown">
+                        <select class="selectpicker" data-style="btn-primary">
+                            <optgroup label="Species">
+                                <option value="all">Any Type</option>
+                                <option value="Mammal">Mammals</option>
+                                <option value="Anfibian">Amphibians</option>
+                                <option value="Bird">Birds</option>
+                                <option value="Reptile">Reptiles</option>                             
+                            </optgroup>
+                        </select>
+                    </div>
+            </li>
+            
+            </ul>
+            <form class="navbar-form navbar-left">
+            <div class="form-group">            
+                <input id='search_text' list="specieslist" type="text" name="fname" class="form-control" value="Vultur gryphus" placeholder="Search" autocomplete="off">
+            </div>
+                <button id='search' type="button" class="btn btn-default">Find Parks</button>
+            </form>
+        </div>
+    </nav>
+
+      <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="map" style="height:600px"></div>
+            </div>
+        </div>
+      </div>
+    
+    <div class="col-md-3" id="sidepanel" style="display: none">
+        <div class="panel panel-default">
+            <div class="panel-body" id="sidebar">
+            </div>
+        </div>
+    </div>
+    <datalist id="specieslist">
+
+    </datalist
+    
+    <!--INCLUDE OWN FILES -->
+    <script src="js/loadserverdata.js"></script> 
+    <script src="js/updateHTML.js"></script>
+    <script src="js/parseParksProperties.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/search.js"></script>
+    
+</body>
+</html>
