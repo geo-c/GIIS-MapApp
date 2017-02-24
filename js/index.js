@@ -64,6 +64,9 @@ var baseMaps = {
 //Creating a layer control and adding it to map
 L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
 
+/**
+ * @desc When overlay is added, change the legend and colour scheme
+ */
 map.on('overlayadd', function(layer){
     if(layer.name == 'Biodiversity') {
         natural_reserves.setStyle(reservesStyleBio);
@@ -73,6 +76,7 @@ map.on('overlayadd', function(layer){
         natural_reserves.setStyle(reservesStyleDeforest);
         addLegendDeforest();
     }
+    //reset layer
     currentLayer = layer;
     if(layer.name == 'None'){
         currentLayer = null;
@@ -88,13 +92,18 @@ map.on('overlayadd', function(layer){
     }  
 });
 
-
+/**
+ * @desc get the style for the selected layer
+ */
 function reservesStyle(feature) {
     if(currentLayer != null) {
+        //style for Biodiversity
         if(currentLayer.name == "Biodiversity") return reservesStyleBio(feature);
+        //style for deforestation
         else if(currentLayer.name == "Deforestation") return reservesStyleDeforest(feature);
     }
     else
+    //default style
     return {
         fillColor: '#008000',
         weight: 0.5,
@@ -105,6 +114,9 @@ function reservesStyle(feature) {
     }
 }
 
+/**
+ * @desc get the style for the deforestation index
+ */
 function reservesStyleDeforest(feature) {
     return {
         fillColor: getColorDeforest(feature.properties.Deforestat),
@@ -116,6 +128,9 @@ function reservesStyleDeforest(feature) {
     };
 }
 
+/**
+ * @desc get the colour for the deforestation index 
+ */
 function getColorDeforest(deforestation) {
         return deforestation >=10.1  ?'#E31A1C' :
            deforestation >=5.9   ?'#FC4E2A' :
@@ -125,6 +140,7 @@ function getColorDeforest(deforestation) {
                       '#A3FF73';
 }
 
+// add legend
 function addLegendDeforest(){
 
 	legend.onAdd = function (map) {
@@ -146,7 +162,9 @@ function addLegendDeforest(){
 }
 
 
-
+/**
+ * @desc add the style for biodiversity index
+ */
 function reservesStyleBio(feature) {
     return {
         fillColor: getColorBio(feature.properties.bio),
@@ -158,6 +176,9 @@ function reservesStyleBio(feature) {
     };
 }
 
+/**
+ * @desc add the colour scheme for the biodiversity choropleth
+ */
 function getColorBio(Biodiversity) {
         return Biodiversity >=0.98  ?'#071DAD' :
            Biodiversity >=0.59  ?'#9400D3' :
@@ -167,6 +188,7 @@ function getColorBio(Biodiversity) {
                       '#A3FF73';
 }
 
+//add legend
 function addLegendBio(){
     
 	legend.onAdd = function (map) {
@@ -212,10 +234,13 @@ function resetHighlight(e) {
 	
 }
 
+// popup for the pictures to click on
 var customPopup = "<table><tr><td><center><b>Birds</b></center></td><td><center><b>Mammals</b></center></td></tr><tr><td><a href='#11'><img src='https://i.ytimg.com/vi/Dbo3eoNN5tc/maxresdefault.jpg' height='70px' width='80px' onclick = 'getAnimals(" + '"Bird"' + ", currentPark);'/></a></td><td><a href='#2'><img src='http://www.animalspot.net/wp-content/uploads/2013/01/Mammals-Hair.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Mammal"' + ", currentPark);' /></a></td></tr><tr><td><center><b>Reptiles</b></center></td><td><center><b>Amphibians</b></center></td></tr><tr><td><a href ='#3'><img src='http://www.naturephoto-cz.com/img/reptiles.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Reptile"' + ", currentPark);' /></td><td></a><a href='#4'><img src='http://www.kidzone.ws/animals/images/amphibian1a.jpg' height='70px' width='80px' onclick='getAnimals(" + '"Amphibian"' + ", currentPark);'/></a></td></tr></table>";
 
 var currentPark;
-
+/**
+ * @desc zooms to the park that was clicked on
+ */
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
     var sidepanel = document.getElementById('sidepanel');
