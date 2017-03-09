@@ -1,0 +1,37 @@
+{
+  "name": "giis",
+  "version": "1.0.0",
+  "description": "> Study project in winter term 2016/17 at ifgi for coursework GI in Society",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saadsarfrazz/GIIS-MapApp.git"
+  },
+  "keywords": [
+    "gis",
+    "linked",
+    "data",
+    "GI",
+    "in",
+    "society",
+    "leaflet"
+  ],
+  "author": "saad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saadsarfrazz/GIIS-MapApp/issues"
+  },
+  "homepage": "https://github.com/saadsarfrazz/GIIS-MapApp#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-select": "^1.12.2",
+    "canvasjs": "^1.8.1",
+    "jquery": "^3.1.1",
+    "leaflet": "^1.0.3",
+    "leaflet-groupedlayercontrol": "^0.5.0",
+    "leaflet-search": "^2.7.0"
+  }
+}
